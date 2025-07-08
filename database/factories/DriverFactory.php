@@ -4,20 +4,20 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Driver>
- */
 class DriverFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            //
+            'cpf' => $this->faker->unique()->numerify('###########'),
+            'name' => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'phone' => $this->faker->phoneNumber,
+            'birth_date' => $this->faker->date(),
+            'mother_name' => $this->faker->name('female'),
+            'rg_number' => $this->faker->optional()->numerify('########'),
+            'rg_uf' => $this->faker->optional()->stateAbbr,
+            'status' => 'pending_onboarding',
         ];
     }
 }
