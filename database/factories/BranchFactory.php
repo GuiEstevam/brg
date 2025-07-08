@@ -12,15 +12,15 @@ class BranchFactory extends Factory
         return [
             'enterprise_id' => Enterprise::factory(),
             'name' => $this->faker->company . ' Branch',
-            'cnpj' => $this->faker->optional()->unique()->numerify('##.###.###/####-##'),
+            'cnpj' => $this->faker->unique()->numerify('##.###.###/####-##'),
             'address' => $this->faker->streetAddress,
             'number' => $this->faker->buildingNumber,
             'uf' => $this->faker->stateAbbr,
             'cep' => $this->faker->postcode,
             'district' => $this->faker->citySuffix,
             'city' => $this->faker->city,
-            'phone' => $this->faker->optional()->phoneNumber,
-            'email' => $this->faker->optional()->safeEmail,
+            'phone' => $this->faker->phoneNumber,
+            'email' => $this->faker->safeEmail,
             'status' => 'active',
         ];
     }

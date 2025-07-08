@@ -23,8 +23,8 @@ class SolicitationFactory extends Factory
             'subtype' => $this->faker->randomElement(['person_process', 'cnh', 'vehicle_data', 'integrated', 'ocr', 'analysis']),
             'value' => $this->faker->numerify('###########'),
             'status' => 'pending',
-            'vincle_type' => $this->faker->optional()->randomElement(['Autonomo', 'Agregado', 'Funcionario']),
-            'research_type' => $this->faker->optional()->randomElement(['Expressa', 'Normal', 'Pesquisa_Mais']),
+            'vincle_type' => $this->faker->randomElement(['Autonomo', 'Agregado', 'Funcionario']),
+            'research_type' => $this->faker->randomElement(['Expressa', 'Normal', 'Pesquisa_Mais']),
             'original_solicitation_id' => null,
             'api_request_data' => [],
         ];

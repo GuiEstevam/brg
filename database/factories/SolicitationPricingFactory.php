@@ -33,7 +33,7 @@ class SolicitationPricingFactory extends Factory
             'validity_autonomo_days' => $this->faker->numberBetween(1, 365),
             'validity_agregado_days' => $this->faker->numberBetween(1, 365),
             'validity_funcionario_days' => $this->faker->numberBetween(1, 365),
-            'description' => $this->faker->optional()->sentence,
+            'description' => $this->faker->sentence,
             'status' => 'active',
         ];
     }

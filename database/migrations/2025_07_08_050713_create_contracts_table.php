@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('unlimited_queries')->default(false);
             $table->integer('total_queries_used')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -1,0 +1,489 @@
+/* ==========================
+   Customizações Gerais
+   ========================== */
+.logo-switch {
+    transition: opacity 0.2s;
+}
+main.container {
+    min-height: 70vh;
+}
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* ==========================
+   Visual Flat & Paleta Pastel
+   ========================== */
+body {
+    color: #222;
+    background-color: #fff;
+    transition: background 0.3s, color 0.3s;
+}
+.table,
+.form-control,
+.form-select,
+.btn,
+.badge,
+.modal-content {
+    border-radius: 12px !important;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ==========================
+   Links e Títulos
+   ========================== */
+.enterprise-link,
+.enterprise-title {
+    color: #5e6472;
+    transition: color 0.3s;
+}
+html[data-bs-theme="dark"] .enterprise-link,
+html[data-bs-theme="dark"] .enterprise-title {
+    color: #ffffff !important;
+}
+
+/* ==========================
+   Tabela Pastel
+   ========================== */
+.table {
+    background: #fff;
+}
+.table thead {
+    background: #f8fafc;
+    color: #5e6472;
+    border-bottom: 2px solid #e0e4ea;
+}
+.table tbody tr {
+    background: #fdf6f0;
+    transition: background 0.2s;
+}
+.table tbody tr:hover {
+    background: #f2e9e1;
+}
+
+/* ==========================
+   Botões Flat/Pastel
+   ========================== */
+.btn-primary {
+    background: #8ee4af;
+    color: #222;
+    border: none;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background: #5ec576;
+    color: #222;
+}
+.btn-success {
+    background: #a0e9c0;
+    color: #222;
+    border: none;
+}
+.btn-success:hover,
+.btn-success:focus {
+    background: #7ddfa5;
+    color: #222;
+}
+.btn-warning {
+    background: #ffe066;
+    color: #222;
+    border: none;
+}
+.btn-warning:hover,
+.btn-warning:focus {
+    background: #ffd23f;
+    color: #222;
+}
+.btn-danger {
+    background: #ff7675;
+    color: #fff;
+    border: none;
+}
+.btn-danger:hover,
+.btn-danger:focus {
+    background: #d63031;
+    color: #fff;
+}
+.btn-edit {
+    background: #b2f7ef;
+    color: #222;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 8px;
+}
+.btn-edit:hover,
+.btn-edit:focus {
+    background: #76d7c4;
+    color: #222;
+}
+.btn-secondary {
+    background: #e0e4ea;
+    color: #5e6472;
+    border: none;
+}
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #b0b4c4;
+    color: #222;
+}
+.btn,
+.btn-primary,
+.btn-success,
+.btn-warning,
+.btn-danger,
+.btn-edit,
+.btn-secondary {
+    font-weight: 600;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ==========================
+   Badges
+   ========================== */
+.badge-success {
+    background: #a0e9c0;
+    color: #222;
+}
+.badge-secondary {
+    background: #e0e4ea;
+    color: #5e6472;
+}
+
+/* ==========================
+   Inputs & Selects
+   ========================== */
+input,
+select,
+.form-control,
+.form-select {
+    background: #f8fafc !important;
+    border: 1px solid #e0e4ea !important;
+    color: #222 !important;
+    border-radius: 10px !important;
+    transition: background 0.3s, color 0.3s;
+}
+.form-control:focus,
+.form-select:focus {
+    border-color: #8ee4af !important;
+    box-shadow: 0 0 0 2px #8ee4af44;
+}
+
+/* ==========================
+   Dashboard Cards & Ícones
+   ========================== */
+.dashboard-card,
+.pastel-box {
+    border-radius: 18px;
+    background: linear-gradient(135deg, #f8fafc 80%, #eafaf1 100%);
+    box-shadow: 0 2px 8px 0 #b0b4c466, 0 8px 24px 0 #b0b4c422,
+        0 1.5px 3px 0 #b0b4c433;
+    padding: 2rem 2rem 1.5rem 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: none;
+    transition: box-shadow 0.3s, background 0.3s;
+}
+.dashboard-icon,
+.pastel-icon {
+    font-size: 2.5rem;
+    color: #8ee4af;
+    background: #e0e4ea;
+    border-radius: 50%;
+    padding: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px 0 #b0b4c433;
+    transition: background 0.3s, color 0.3s;
+}
+.pastel-icon-green {
+    color: #2ecc71;
+    background: #eafaf1;
+}
+.pastel-icon-red {
+    color: #d63031;
+    background: #fff0f0;
+}
+.dashboard-metric,
+.dashboard-label {
+    color: #5e6472;
+    transition: color 0.3s;
+}
+.dashboard-metric {
+    font-size: 2.1rem;
+    font-weight: 700;
+}
+.dashboard-label {
+    font-size: 1rem;
+    margin-top: -0.4rem;
+}
+@media (max-width: 767px) {
+    .dashboard-card,
+    .pastel-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .dashboard-icon,
+    .pastel-icon {
+        font-size: 2rem;
+    }
+    .dashboard-metric {
+        font-size: 1.3rem;
+    }
+}
+
+/* ==========================
+   Modal Pastel
+   ========================== */
+.modal-content {
+    background: #f8fafc;
+    border-radius: 16px;
+    border: none;
+    color: #222;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ==========================
+   Navbar
+   ========================== */
+.navbar,
+.navbar .navbar-brand,
+.navbar .nav-link,
+.navbar .dropdown-item {
+    color: #222 !important;
+    transition: color 0.3s;
+}
+
+/* ==========================
+   Formulário Moderno de Empresa
+   ========================== */
+.enterprise-form-card {
+    max-width: 1100px;
+    width: 95vw;
+    margin: 2rem auto;
+    padding: 3rem 2rem;
+    border-radius: 32px;
+    box-shadow: 0 2px 24px 0 #b0b4c466;
+    background: #fff;
+}
+
+html[data-bs-theme="dark"] .enterprise-form-card {
+    background: #23272f;
+    box-shadow: 0 2px 24px 0 #0008, 0 8px 32px 0 #0004;
+}
+.form-floating > .form-control,
+.form-floating > .form-select {
+    height: 58px;
+    padding: 1.1rem 0.75rem 0.1rem 0.75rem;
+    font-size: 1.1rem;
+}
+.form-floating > label {
+    color: #7e8597;
+    font-weight: 500;
+    left: 0.75rem;
+}
+html[data-bs-theme="dark"] .form-floating > label {
+    color: #b0b4c4;
+}
+.form-floating .form-control:focus,
+.form-floating .form-select:focus {
+    border-color: #8ee4af !important;
+    box-shadow: 0 0 0 2px #8ee4af44;
+}
+.btn-lg {
+    font-size: 1.1rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+@media (max-width: 991px) {
+    .enterprise-form-card {
+        max-width: 99vw;
+        width: 99vw;
+        padding: 2rem 0.5rem;
+    }
+}
+
+/* ==========================
+   Paginação
+   ========================== */
+.pagination {
+    justify-content: center;
+    margin-top: 2rem;
+}
+.page-link {
+    color: #5e6472;
+    background: #fff;
+    border: 1px solid #e0e4ea;
+    border-radius: 8px;
+    margin: 0 2px;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+.page-link:hover,
+.page-link:focus {
+    background: #f8fafc;
+    color: #222;
+}
+.page-item.active .page-link {
+    background: #8ee4af;
+    color: #222;
+    border-color: #8ee4af;
+}
+
+/* ==========================
+   Modo Escuro (Dark Mode)
+   ========================== */
+html[data-bs-theme="dark"] body {
+    color: #fff !important;
+    background-color: #23272f !important;
+}
+html[data-bs-theme="dark"] .dashboard-card,
+html[data-bs-theme="dark"] .pastel-box,
+html[data-bs-theme="dark"] .enterprise-form-card {
+    background: linear-gradient(135deg, #23272f 80%, #2d313a 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px 0 #0005, 0 8px 24px 0 #0002, 0 1.5px 3px 0 #2225;
+}
+html[data-bs-theme="dark"] .dashboard-icon,
+html[data-bs-theme="dark"] .pastel-icon {
+    background: #353b48 !important;
+    color: #41ff6a !important;
+}
+html[data-bs-theme="dark"] .pastel-icon-green {
+    color: #2ecc71 !important;
+    background: #23272f !important;
+}
+html[data-bs-theme="dark"] .pastel-icon-red {
+    color: #d63031 !important;
+    background: #23272f !important;
+}
+html[data-bs-theme="dark"] .dashboard-metric,
+html[data-bs-theme="dark"] .dashboard-label {
+    color: #ffffff !important;
+}
+html[data-bs-theme="dark"] .table,
+html[data-bs-theme="dark"] .pastel-table,
+html[data-bs-theme="dark"] .table th,
+html[data-bs-theme="dark"] .table td {
+    background: #2d313a !important;
+    color: #ffffff !important;
+    border-color: #353b48 !important;
+}
+html[data-bs-theme="dark"] .table thead {
+    background: #23272f !important;
+    color: #41ff6a !important;
+    border-bottom: 2px solid #353b48 !important;
+}
+html[data-bs-theme="dark"] .table tbody tr:hover {
+    background: #353b48 !important;
+}
+html[data-bs-theme="dark"] .badge-success {
+    background: #2ecc71 !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .badge-secondary {
+    background: #353b48 !important;
+    color: #41ff6a !important;
+}
+html[data-bs-theme="dark"] .btn-primary {
+    background: #41ff6a !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-primary:hover,
+html[data-bs-theme="dark"] .btn-primary:focus {
+    background: #2ecc71 !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-success {
+    background: #2ecc71 !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-success:hover,
+html[data-bs-theme="dark"] .btn-success:focus {
+    background: #41ff6a !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-warning {
+    background: #ffe066 !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-warning:hover,
+html[data-bs-theme="dark"] .btn-warning:focus {
+    background: #ffd23f !important;
+    color: #23272f !important;
+}
+html[data-bs-theme="dark"] .btn-danger {
+    background: #d63031 !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .btn-danger:hover,
+html[data-bs-theme="dark"] .btn-danger:focus {
+    background: #ff7675 !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .btn-secondary {
+    background: #353b48 !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .btn-secondary:hover,
+html[data-bs-theme="dark"] .btn-secondary:focus {
+    background: #23272f !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .btn-edit {
+    background: #2dceef !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .btn-edit:hover,
+html[data-bs-theme="dark"] .btn-edit:focus {
+    background: #1faab8 !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] input,
+html[data-bs-theme="dark"] select,
+html[data-bs-theme="dark"] .form-control,
+html[data-bs-theme="dark"] .form-select {
+    background: #23272f !important;
+    color: #ffffff !important;
+    border: 1px solid #353b48 !important;
+}
+html[data-bs-theme="dark"] .form-floating > label {
+    color: #b0b4c4 !important;
+}
+html[data-bs-theme="dark"] .navbar,
+html[data-bs-theme="dark"] .navbar .navbar-brand,
+html[data-bs-theme="dark"] .navbar .nav-link,
+html[data-bs-theme="dark"] .navbar .dropdown-item,
+html[data-bs-theme="dark"] .navbar-nav .nav-link,
+html[data-bs-theme="dark"] .navbar-toggler {
+    background: #23272f !important;
+    color: #ffffff !important;
+    border: none;
+}
+html[data-bs-theme="dark"] .enterprise-title,
+html[data-bs-theme="dark"] .enterprise-link {
+    color: #ffffff !important;
+}
+html[data-bs-theme="dark"] .pagination {
+    background: transparent;
+}
+html[data-bs-theme="dark"] .page-link {
+    color: #41ff6a !important;
+    background: #23272f !important;
+    border: 1px solid #353b48 !important;
+}
+html[data-bs-theme="dark"] .page-link:hover,
+html[data-bs-theme="dark"] .page-link:focus {
+    background: #353b48 !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .page-item.active .page-link {
+    background: #41ff6a !important;
+    color: #23272f !important;
+    border-color: #41ff6a !important;
+}
+html[data-bs-theme="dark"] .alert {
+    border-color: #444;
+}

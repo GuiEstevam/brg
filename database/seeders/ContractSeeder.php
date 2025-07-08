@@ -2,16 +2,19 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Contract;
+use App\Models\Enterprise;
 
 class ContractSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        //
+        // Cria 1 contrato para cada empresa
+        Enterprise::all()->each(function ($enterprise) {
+            Contract::factory()->create([
+                'enterprise_id' => $enterprise->id,
+            ]);
+        });
     }
 }

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -15,7 +15,7 @@ class DocumentFactory extends Factory
             'original_name' => $this->faker->word . '.pdf',
             'mime_type' => 'application/pdf',
             'size' => $this->faker->numberBetween(10000, 5000000),
-            'expiration_date' => $this->faker->optional()->date(),
+            'expiration_date' => $this->faker->date(),
             'status' => 'pending_validation',
             'owner_id' => 1, // Ajuste conforme uso real
             'owner_type' => 'App\\Models\\Driver',

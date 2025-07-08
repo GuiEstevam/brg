@@ -2,16 +2,19 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\SolicitationPricing;
+use App\Models\Enterprise;
 
 class SolicitationPricingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        //
+        // Cria uma tabela de preços para cada empresa
+        Enterprise::all()->each(function ($enterprise) {
+            SolicitationPricing::factory()->create([
+                'enterprise_id' => $enterprise->id,
+            ]);
+        });
     }
 }

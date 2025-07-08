@@ -15,13 +15,13 @@ class EnterpriseFactory extends Factory
             'address' => $this->faker->streetAddress,
             'number' => $this->faker->buildingNumber,
             'uf' => $this->faker->stateAbbr,
-            'complement' => $this->faker->optional()->secondaryAddress,
+            'complement' => $this->faker->secondaryAddress,
             'cep' => $this->faker->postcode,
             'district' => $this->faker->citySuffix,
             'city' => $this->faker->city,
-            'responsible_name' => $this->faker->optional()->name,
-            'responsible_email' => $this->faker->optional()->safeEmail,
-            'responsible_phone' => $this->faker->optional()->phoneNumber,
+            'responsible_name' => $this->faker->name,
+            'responsible_email' => $this->faker->safeEmail,
+            'responsible_phone' => $this->faker->phoneNumber,
             'status' => 'active',
         ];
     }

@@ -4,10 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Research extends Model
 {
     use SoftDeletes;
+    use HasFactory;
+
+    protected $table = 'researches';
+
+    protected $casts = [
+    'api_response' => 'array',
+    'rejection_reasons' => 'array',
+    ];
 
     protected $fillable = [
         'solicitation_id',

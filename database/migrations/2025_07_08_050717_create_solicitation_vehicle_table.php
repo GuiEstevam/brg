@@ -22,6 +22,7 @@ return new class extends Migration
             // Chaves estrangeiras
             $table->foreign('solicitation_id')->references('id')->on('solicitations')->onDelete('cascade');
             $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

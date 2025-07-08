@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Document;
+use App\Models\Driver;
 
 class DocumentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        //
+        // Cria 2 documentos para cada motorista
+        Driver::all()->each(function ($driver) {
+            Document::factory()->count(1)->create([
+                'owner_id' => $driver->id,
+                'owner_type' => 'App\Models\Driver',
+            ]);
+        });
     }
 }

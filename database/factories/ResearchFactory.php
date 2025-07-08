@@ -16,10 +16,10 @@ class ResearchFactory extends Factory
             'driver_id' => Driver::factory(),
             'vehicle_id' => Vehicle::factory(),
             'api_response' => [],
-            'status_api' => $this->faker->optional()->randomElement(['Adequado ao risco', 'Inconclusivo']),
-            'validity_date' => $this->faker->optional()->date(),
+            'status_api' => $this->faker->randomElement(['Adequado ao risco', 'Inconclusivo']),
+            'validity_date' => $this->faker->date(),
             'rejection_reasons' => [],
-            'total_points' => $this->faker->optional()->numberBetween(0, 40),
+            'total_points' => $this->faker->numberBetween(0, 40),
         ];
     }
 }

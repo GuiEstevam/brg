@@ -15,8 +15,8 @@ class DriverFactory extends Factory
             'phone' => $this->faker->phoneNumber,
             'birth_date' => $this->faker->date(),
             'mother_name' => $this->faker->name('female'),
-            'rg_number' => $this->faker->optional()->numerify('########'),
-            'rg_uf' => $this->faker->optional()->stateAbbr,
+            'rg_number' => $this->faker->numerify('########'),
+            'rg_uf' => $this->faker->stateAbbr,
             'status' => 'pending_onboarding',
         ];
     }

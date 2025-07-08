@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->timestamp('deactivated_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
