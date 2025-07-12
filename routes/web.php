@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EnterpriseController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\DocumentController;
@@ -23,9 +24,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Rotas resource para todas as entidades principais
     Route::resource('enterprises', EnterpriseController::class);
@@ -38,5 +37,4 @@ Route::middleware([
     Route::resource('solicitations', SolicitationController::class);
     Route::resource('researches', ResearchController::class);
     Route::resource('solicitation-pricings', SolicitationPricingController::class);
-    Route::resource('pricings', PricingController::class);
 });

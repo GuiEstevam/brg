@@ -149,12 +149,15 @@ html[data-bs-theme="dark"] .enterprise-title {
     color: #5e6472;
 }
 
-/* ==========================
-   Inputs & Selects
-   ========================== */
-input,
-select,
+/* Apenas campos de texto e selects */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="search"],
 .form-control,
+select,
 .form-select {
     background: #f8fafc !important;
     border: 1px solid #e0e4ea !important;
@@ -162,10 +165,13 @@ select,
     border-radius: 10px !important;
     transition: background 0.3s, color 0.3s;
 }
-.form-control:focus,
-.form-select:focus {
-    border-color: #8ee4af !important;
-    box-shadow: 0 0 0 2px #8ee4af44;
+
+/* Checkboxes e radios: mantenha o visual padrão do Bootstrap */
+input[type="checkbox"],
+input[type="radio"] {
+    /* Não coloque background, border-radius, color, etc */
+    /* Se quiser, pode só ajustar o tamanho ou espaçamento */
+    accent-color: #8ee4af; /* opcional: cor do check */
 }
 
 /* ==========================

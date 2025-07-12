@@ -7,15 +7,31 @@ use Illuminate\Http\Request;
 
 class DocumentController extends Controller
 {
+    /**
+     * Retorna os tipos de documento disponíveis.
+     */
+    private function getDocumentTypes()
+    {
+        return [
+            'cnh',
+            'crlv',
+            'comprovante_residencia',
+            'contrato_social',
+            'outro',
+        ];
+    }
+
     public function index()
     {
         $documents = Document::with('owner', 'uploadedBy', 'validatedBy')->paginate(20);
-        return view('documents.index', compact('documents'));
+        $documentTypes = $this->getDocumentTypes();
+        return view('documents.index', compact('documents', 'documentTypes'));
     }
 
     public function create()
     {
-        return view('documents.create');
+        $documentTypes = $this->getDocumentTypes();
+        return view('documents.create', compact('documentTypes'));
     }
 
     public function store(Request $request)
@@ -47,7 +63,8 @@ class DocumentController extends Controller
 
     public function edit(Document $document)
     {
-        return view('documents.edit', compact('document'));
+        $documentTypes = $this->getDocumentTypes();
+        return view('documents.edit', compact('document', 'documentTypes'));
     }
 
     public function update(Request $request, Document $document)

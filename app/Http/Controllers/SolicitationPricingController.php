@@ -8,10 +8,38 @@ use Illuminate\Http\Request;
 
 class SolicitationPricingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pricings = SolicitationPricing::with('enterprise')->paginate(20);
-        return view('solicitation_pricings.index', compact('pricings'));
+        $enterprises = Enterprise::orderBy('name')->get();
+
+        $query = SolicitationPricing::with('enterprise');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                    ->orWhereHas('enterprise', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+        if ($request->filled('enterprise_id')) {
+            $query->where('enterprise_id', $request->enterprise_id);
+        }
+
+        $solicitationPricings = $query->paginate(15)->withQueryString();
+
+        $enterprisesCount = $solicitationPricings->pluck('enterprise_id')->unique()->count();
+        $activeRulesCount = $solicitationPricings->filter(function ($item) {
+            return $item->status === 'active';
+        })->count();
+
+        return view('solicitation_pricings.index', compact(
+            'solicitationPricings',
+            'enterprises',
+            'enterprisesCount',
+            'activeRulesCount'
+        ));
     }
 
     public function create()
@@ -24,31 +52,35 @@ class SolicitationPricingController extends Controller
     {
         $validated = $request->validate([
             'enterprise_id' => 'required|exists:enterprises,id',
-            'individual_driver_price' => 'required|numeric',
-            'individual_vehicle_price' => 'required|numeric',
-            'unified_price' => 'required|numeric',
-            'individual_driver_recurring' => 'required|boolean',
-            'individual_vehicle_recurring' => 'required|boolean',
-            'unified_recurring' => 'required|boolean',
+            'description' => 'required|string|max:255',
+            'individual_driver_price' => 'required|string',
+            'individual_vehicle_price' => 'required|string',
+            'unified_price' => 'required|string',
+            'unified_additional_vehicle_2' => 'nullable|string',
+            'unified_additional_vehicle_3' => 'nullable|string',
+            'unified_additional_vehicle_4' => 'nullable|string',
+            'recurrence_autonomo' => 'nullable|boolean',
+            'recurrence_agregado' => 'nullable|boolean',
+            'recurrence_frota' => 'nullable|boolean',
             'validity_days' => 'nullable|integer',
-            'price_expressa_driver' => 'nullable|numeric',
-            'price_normal_driver' => 'nullable|numeric',
-            'price_plus_driver' => 'nullable|numeric',
-            'price_expressa_vehicle' => 'nullable|numeric',
-            'price_normal_vehicle' => 'nullable|numeric',
-            'price_plus_vehicle' => 'nullable|numeric',
-            'price_expressa_unified' => 'nullable|numeric',
-            'price_normal_unified' => 'nullable|numeric',
-            'price_plus_unified' => 'nullable|numeric',
-            'unified_additional_per_vehicle_expressa' => 'nullable|numeric',
-            'unified_additional_per_vehicle_normal' => 'nullable|numeric',
-            'unified_additional_per_vehicle_plus' => 'nullable|numeric',
             'validity_autonomo_days' => 'nullable|integer',
             'validity_agregado_days' => 'nullable|integer',
             'validity_funcionario_days' => 'nullable|integer',
-            'description' => 'nullable|string',
             'status' => 'required|string|max:20',
         ]);
+
+        // Converte valores mascarados para float
+        $validated['individual_driver_price'] = $this->moneyToFloat($validated['individual_driver_price']);
+        $validated['individual_vehicle_price'] = $this->moneyToFloat($validated['individual_vehicle_price']);
+        $validated['unified_price'] = $this->moneyToFloat($validated['unified_price']);
+        $validated['unified_additional_vehicle_2'] = $this->moneyToFloat($validated['unified_additional_vehicle_2'] ?? null);
+        $validated['unified_additional_vehicle_3'] = $this->moneyToFloat($validated['unified_additional_vehicle_3'] ?? null);
+        $validated['unified_additional_vehicle_4'] = $this->moneyToFloat($validated['unified_additional_vehicle_4'] ?? null);
+
+        // Garante booleanos para checkboxes
+        $validated['recurrence_autonomo'] = $request->has('recurrence_autonomo');
+        $validated['recurrence_agregado'] = $request->has('recurrence_agregado');
+        $validated['recurrence_frota'] = $request->has('recurrence_frota');
 
         $pricing = SolicitationPricing::create($validated);
 
@@ -71,8 +103,33 @@ class SolicitationPricingController extends Controller
     {
         $validated = $request->validate([
             'enterprise_id' => 'required|exists:enterprises,id',
-            // ... mesmas regras do store
+            'description' => 'required|string|max:255',
+            'individual_driver_price' => 'required|string',
+            'individual_vehicle_price' => 'required|string',
+            'unified_price' => 'required|string',
+            'unified_additional_vehicle_2' => 'nullable|string',
+            'unified_additional_vehicle_3' => 'nullable|string',
+            'unified_additional_vehicle_4' => 'nullable|string',
+            'recurrence_autonomo' => 'nullable|boolean',
+            'recurrence_agregado' => 'nullable|boolean',
+            'recurrence_frota' => 'nullable|boolean',
+            'validity_days' => 'nullable|integer',
+            'validity_autonomo_days' => 'nullable|integer',
+            'validity_agregado_days' => 'nullable|integer',
+            'validity_funcionario_days' => 'nullable|integer',
+            'status' => 'required|string|max:20',
         ]);
+
+        $validated['individual_driver_price'] = $this->moneyToFloat($validated['individual_driver_price']);
+        $validated['individual_vehicle_price'] = $this->moneyToFloat($validated['individual_vehicle_price']);
+        $validated['unified_price'] = $this->moneyToFloat($validated['unified_price']);
+        $validated['unified_additional_vehicle_2'] = $this->moneyToFloat($validated['unified_additional_vehicle_2'] ?? null);
+        $validated['unified_additional_vehicle_3'] = $this->moneyToFloat($validated['unified_additional_vehicle_3'] ?? null);
+        $validated['unified_additional_vehicle_4'] = $this->moneyToFloat($validated['unified_additional_vehicle_4'] ?? null);
+
+        $validated['recurrence_autonomo'] = $request->has('recurrence_autonomo');
+        $validated['recurrence_agregado'] = $request->has('recurrence_agregado');
+        $validated['recurrence_frota'] = $request->has('recurrence_frota');
 
         $solicitationPricing->update($validated);
 
@@ -83,5 +140,15 @@ class SolicitationPricingController extends Controller
     {
         $solicitationPricing->delete();
         return redirect()->route('solicitation-pricings.index')->with('success', 'Tabela de preços removida!');
+    }
+
+    /**
+     * Converte valor monetário mascarado (ex: "1.234,56") em float (1234.56)
+     */
+    private function moneyToFloat($value)
+    {
+        if (is_null($value) || $value === '') return null;
+        // Remove pontos de milhar e troca vírgula por ponto
+        return floatval(str_replace(['.', ','], ['', '.'], preg_replace('/\./', '', $value, -1, $count)));
     }
 }

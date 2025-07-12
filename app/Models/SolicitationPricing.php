@@ -6,37 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-
 class SolicitationPricing extends Model
 {
-    use SoftDeletes;
-    use HasFactory;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'enterprise_id',
+        'description',
         'individual_driver_price',
         'individual_vehicle_price',
         'unified_price',
-        'individual_driver_recurring',
-        'individual_vehicle_recurring',
-        'unified_recurring',
+        'unified_additional_vehicle_2',
+        'unified_additional_vehicle_3',
+        'unified_additional_vehicle_4',
+        'recurrence_autonomo',
+        'recurrence_agregado',
+        'recurrence_frota',
         'validity_days',
-        'price_expressa_driver',
-        'price_normal_driver',
-        'price_plus_driver',
-        'price_expressa_vehicle',
-        'price_normal_vehicle',
-        'price_plus_vehicle',
-        'price_expressa_unified',
-        'price_normal_unified',
-        'price_plus_unified',
-        'unified_additional_per_vehicle_expressa',
-        'unified_additional_per_vehicle_normal',
-        'unified_additional_per_vehicle_plus',
         'validity_autonomo_days',
         'validity_agregado_days',
         'validity_funcionario_days',
-        'description',
         'status',
     ];
 
