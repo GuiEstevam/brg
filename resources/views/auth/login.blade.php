@@ -1,48 +1,64 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+@extends('layouts.guest')
+@section('title', 'Login')
 
-        <x-validation-errors class="mb-4" />
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endpush
 
-        @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
-            </div>
-        @endsession
+@section('content')
+  <div class="container d-flex flex-column justify-content-center align-items-center">
+    <div class="text-center mb-4">
+      <!-- Logo clara -->
+      <img src="{{ asset('img/logo.png') }}" alt="Logo BRG" id="logo-light" class="logo-switch login-logo">
+      <!-- Logo escura -->
+      <img src="{{ asset('img/logo-dark.png') }}" alt="Logo BRG Dark" id="logo-dark" class="logo-switch login-logo d-none">
+    </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+    <div class="card login-card shadow-sm p-4">
+      <h2 class="login-title mb-3 fw-bold text-center">Acesso ao Sistema</h2>
 
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            </div>
+      <form method="POST" action="{{ route('login') }}">
+        @csrf
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">E-mail</label>
+          <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+            value="{{ old('email') }}" required autocomplete="email" autofocus>
+          @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+          @enderror
+        </div>
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
+        <!-- Senha -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Senha</label>
+          <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
+            name="password" required autocomplete="current-password">
+          @error('password')
+            <div class="invalid-feedback">{{ $message }}</div>
+          @enderror
+        </div>
 
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
+        <!-- Lembrar-me e link -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="remember" id="remember"
+              {{ old('remember') ? 'checked' : '' }}>
+            <label class="form-check-label" for="remember">
+              Lembrar-me
+            </label>
+          </div>
+          <a href="{{ route('password.request') }}" class="login-link">
+            Esqueceu a senha?
+          </a>
+        </div>
 
-                <x-button class="ms-4">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+        <!-- Botão -->
+        <button type="submit" class="btn btn-primary w-100 fw-bold login-btn">
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+@endsection

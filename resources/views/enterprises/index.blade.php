@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Empresas')
 
-@push('styles')
-  <!-- Bootstrap Icons para fallback nos cards -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-@endpush
-
 @section('content')
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb bg-transparent p-0">
@@ -19,8 +14,8 @@
   <!-- Dashboard Cards -->
   <div class="row mb-4">
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon">
           <ion-icon name="business-outline"></ion-icon>
         </span>
         <div>
@@ -30,8 +25,8 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-green">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #4cd137;">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
         </span>
         <div>
@@ -43,8 +38,8 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-red">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #8e2636;">
           <ion-icon name="close-circle-outline"></ion-icon>
         </span>
         <div>
@@ -80,7 +75,7 @@
 
   <!-- Tabela de Empresas -->
   <div class="table-responsive">
-    <table class="table align-middle pastel-table">
+    <table class="table align-middle">
       <thead>
         <tr>
           <th>#</th>
@@ -92,13 +87,10 @@
       </thead>
       <tbody>
         @forelse($enterprises as $enterprise)
-          <tr>
+          <tr class="table-row-clickable" onclick="window.location='{{ route('enterprises.show', $enterprise) }}';"
+            style="cursor:pointer;">
             <td>{{ $enterprise->id }}</td>
-            <td>
-              <a href="{{ route('enterprises.show', $enterprise) }}" class="fw-semibold enterprise-link">
-                {{ $enterprise->name }}
-              </a>
-            </td>
+            <td>{{ $enterprise->name }}</td>
             <td>{{ $enterprise->cnpj }}</td>
             <td>
               <span class="badge {{ $enterprise->status === 'active' ? 'badge-success' : 'badge-secondary' }}">
@@ -106,11 +98,12 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('enterprises.edit', $enterprise) }}" class="btn btn-edit me-1" title="Editar">
+              <a href="{{ route('enterprises.edit', $enterprise) }}" class="btn btn-edit me-1" title="Editar"
+                onclick="event.stopPropagation();">
                 <ion-icon name="create-outline"></ion-icon>
               </a>
               <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $enterprise->id }}" title="Excluir">
+                data-bs-target="#deleteModal{{ $enterprise->id }}" title="Excluir" onclick="event.stopPropagation();">
                 <ion-icon name="trash-outline"></ion-icon>
               </button>
               @include('enterprises._delete_modal', ['enterprise' => $enterprise])
@@ -127,3 +120,13 @@
 
   {{ $enterprises->withQueryString()->links('pagination::bootstrap-5') }}
 @endsection
+
+@push('scripts')
+  <script>
+    // Opcional: realce de hover para linhas clicáveis
+    document.querySelectorAll('.table-row-clickable').forEach(row => {
+      row.addEventListener('mouseover', () => row.classList.add('table-row-hover'));
+      row.addEventListener('mouseout', () => row.classList.remove('table-row-hover'));
+    });
+  </script>
+@endpush

@@ -1,0 +1,142 @@
+/* ==========================
+   Navbar - Estilos principais e melhorias BRG
+   ========================== */
+
+/* Fundo e cores da navbar e itens */
+.navbar,
+.navbar .navbar-brand,
+.navbar .nav-link,
+.navbar .dropdown-item {
+    background: var(--brg-blue) !important;
+    color: var(--brg-white) !important;
+    transition: color 0.3s, background 0.3s;
+}
+
+/* Logo sem filtro */
+.navbar .navbar-brand img {
+    filter: none;
+}
+
+/* Links ativos e hover com vinho */
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+    color: var(--brg-wine) !important;
+}
+
+/* Dropdown com fundo igual à navbar */
+.navbar .dropdown-menu {
+    background-color: var(--brg-blue) !important;
+    border: none;
+    box-shadow: 0 4px 16px 0 rgba(15, 34, 57, 0.08);
+    border-radius: 12px;
+    min-width: 220px;
+    padding: 0.5rem 0;
+}
+
+/* Itens do dropdown em branco */
+.navbar .dropdown-menu .dropdown-item {
+    color: #fff !important;
+    background: transparent !important;
+    transition: background 0.2s, color 0.2s;
+    border: none;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Hover nos itens do dropdown com vinho */
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus {
+    background-color: var(--brg-wine) !important;
+    color: #fff !important;
+}
+
+/* Dropdown header (perfil) */
+.navbar .dropdown-header {
+    background: transparent;
+    color: var(--brg-wine);
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding-bottom: 0;
+    padding-top: 0.6rem;
+}
+
+/* Badge de perfil no dropdown */
+.navbar .dropdown-header .badge.bg-info {
+    background: #fff !important;
+    color: var(--brg-wine) !important;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: 1.5px solid var(--brg-wine);
+    letter-spacing: 1px;
+    padding: 0.45em 0.95em;
+    margin-bottom: 0.4em;
+}
+
+/* Descritivo do perfil */
+.navbar .dropdown-header .perfil-descr {
+    color: var(--brg-wine);
+    font-size: 0.98rem;
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+/* Hamburguer branco no modo claro */
+html[data-bs-theme="light"] .navbar-toggler {
+    border-color: #fff;
+}
+html[data-bs-theme="light"] .navbar-toggler-icon {
+    filter: invert(100%) brightness(200%);
+}
+
+/* Switch de tema consistente */
+.form-switch .form-check-input {
+    background-color: #fff !important;
+    border: 1px solid #bfc5ce !important;
+}
+.form-switch .form-check-input:checked {
+    background-color: var(--brg-wine) !important;
+    border-color: var(--brg-wine) !important;
+}
+html[data-bs-theme="dark"] .form-switch .form-check-input {
+    background-color: #fff !important;
+    border: 1px solid #bfc5ce !important;
+}
+html[data-bs-theme="dark"] .form-switch .form-check-input:checked {
+    background-color: var(--brg-wine) !important;
+    border-color: var(--brg-wine) !important;
+}
+
+/* Dark Mode - fundo escuro e cores claras */
+html[data-bs-theme="dark"] .navbar,
+html[data-bs-theme="dark"] .navbar .navbar-brand,
+html[data-bs-theme="dark"] .navbar .nav-link,
+html[data-bs-theme="dark"] .navbar .dropdown-item,
+html[data-bs-theme="dark"] .navbar .dropdown-menu {
+    background: #181a1b !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .navbar .nav-link.active,
+html[data-bs-theme="dark"] .navbar .nav-link:focus,
+html[data-bs-theme="dark"] .navbar .nav-link:hover {
+    color: #ffffff !important;
+}
+html[data-bs-theme="dark"] .navbar .dropdown-menu .dropdown-item:hover,
+html[data-bs-theme="dark"] .navbar .dropdown-menu .dropdown-item:focus {
+    background-color: #b02a37 !important;
+    color: #fff !important;
+}
+/* Badge de perfil no dark */
+html[data-bs-theme="dark"] .navbar .dropdown-header .badge.bg-info {
+    background: #b02a37 !important;
+    color: #fff !important;
+    border-color: #ffe066;
+}
+html[data-bs-theme="dark"] .navbar .dropdown-header .perfil-descr {
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .navbar-toggler {
+    border-color: #fff;
+}
+html[data-bs-theme="dark"] .navbar-toggler-icon {
+    filter: invert(100%) brightness(200%);
+}

@@ -1,88 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Status da Solicitação')
 
-@push('styles')
-  <style>
-    .status-hero {
-      background: linear-gradient(135deg, #eafaf1 80%, #f8fafc 100%);
-      border-radius: 32px;
-      box-shadow: 0 2px 16px 0 #b0b4c466;
-      padding: 2.5rem 2rem 2rem 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .status-hero .icon-main {
-      font-size: 3.5rem;
-      color: #8ee4af;
-      margin-bottom: 1rem;
-    }
-
-    .status-hero .badge {
-      font-size: 1.2em;
-      padding: 0.5em 1.1em;
-      border-radius: 1.5em;
-      margin-left: 0.5em;
-    }
-
-    .status-step {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-      font-size: 1.1rem;
-    }
-
-    .status-step .step-icon {
-      font-size: 1.8rem;
-      color: #8ee4af;
-    }
-
-    .status-step.completed .step-icon {
-      color: #41ff6a;
-    }
-
-    .status-step.error .step-icon {
-      color: #ff7675;
-    }
-
-    .status-step .step-label {
-      font-weight: 600;
-    }
-
-    .status-step .step-date {
-      font-size: 0.98rem;
-      color: #5e6472;
-      margin-left: auto;
-    }
-
-    .status-card {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 2px 12px 0 #b0b4c433;
-      padding: 2rem 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .status-summary {
-      font-size: 1.15rem;
-      color: #222;
-      margin-bottom: 1rem;
-    }
-
-    @media (max-width: 767px) {
-      .status-hero {
-        padding: 1.5rem 0.7rem;
-      }
-
-      .status-card {
-        padding: 1.2rem 0.7rem;
-      }
-    }
-  </style>
-@endpush
-
 @section('content')
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb bg-transparent p-0">
@@ -92,7 +10,7 @@
     </ol>
   </nav>
 
-  <div class="status-hero">
+  <div class="status-hero mb-4">
     <div class="icon-main mb-2">
       <ion-icon name="search-circle-outline"></ion-icon>
     </div>
@@ -112,10 +30,19 @@
         {{ $solicitation->created_at ? $solicitation->created_at->format('d/m/Y H:i') : '-' }}
       </span>
     </div>
+    <div class="mt-3 d-flex justify-content-center gap-2">
+      <a href="{{ route('solicitations.index') }}" class="btn btn-secondary btn-lg px-4">
+        <ion-icon name="arrow-back-outline"></ion-icon> Minhas Solicitações
+      </a>
+      <a href="#" class="btn btn-primary btn-lg px-4"
+        onclick="event.preventDefault(); alert('Funcionalidade em breve!')">
+        <ion-icon name="download-outline"></ion-icon> Emitir PDF
+      </a>
+    </div>
   </div>
 
-  <div class="status-card">
-    <div class="row g-3 mb-3">
+  <div class="status-card mb-4">
+    <div class="row g-3">
       <div class="col-md-6">
         <div class="mb-2"><strong>Empresa:</strong> {{ $solicitation->enterprise->name ?? '-' }}</div>
         <div class="mb-2"><strong>Filial:</strong> {{ $solicitation->branch->name ?? '-' }}</div>
@@ -135,53 +62,75 @@
     </div>
   </div>
 
-  <div class="status-card">
-    <h5 class="mb-3" style="color:#5e6472;">Andamento da Solicitação</h5>
-    @php
-      $steps = [
-          [
-              'label' => 'Solicitação enviada',
-              'icon' => 'send-outline',
-              'completed' => true,
-              'date' => $solicitation->created_at ? $solicitation->created_at->format('d/m/Y H:i') : null,
-          ],
-          [
-              'label' => 'Processando',
-              'icon' => 'hourglass-outline',
-              'completed' => in_array($solicitation->status, ['processing', 'finished', 'error']),
-              'date' =>
-                  $solicitation->status === 'processing' && $solicitation->updated_at
-                      ? $solicitation->updated_at->format('d/m/Y H:i')
-                      : null,
-          ],
-          [
-              'label' => 'Resultado',
-              'icon' =>
-                  $solicitation->status === 'finished'
-                      ? 'checkmark-circle-outline'
-                      : ($solicitation->status === 'error'
-                          ? 'close-circle-outline'
-                          : 'flask-outline'),
-              'completed' => in_array($solicitation->status, ['finished', 'error']),
-              'error' => $solicitation->status === 'error',
-              'date' =>
-                  $solicitation->status === 'finished' && $solicitation->updated_at
-                      ? $solicitation->updated_at->format('d/m/Y H:i')
-                      : null,
-          ],
-      ];
-    @endphp
-    @foreach ($steps as $step)
-      <div class="status-step {{ $step['completed'] ? 'completed' : '' }} {{ $step['error'] ?? false ? 'error' : '' }}">
-        <span class="step-icon">
-          <ion-icon name="{{ $step['icon'] }}"></ion-icon>
-        </span>
-        <span class="step-label">{{ $step['label'] }}</span>
-        @if ($step['date'])
-          <span class="step-date">{{ $step['date'] }}</span>
+  <div class="status-card mb-4">
+    <h5 class="mb-3" style="color:#5e6472;">Linha do Tempo</h5>
+    <div class="timeline-chat">
+      @php
+        $timeline = [
+            [
+                'side' => 'left',
+                'icon' => 'send-outline',
+                'label' => 'Solicitação enviada',
+                'date' => $solicitation->created_at,
+                'user' => true,
+                'status' => 'success',
+            ],
+            [
+                'side' => 'right',
+                'icon' => 'cloud-upload-outline',
+                'label' => 'Recebida pela API',
+                'date' => $solicitation->api_received_at ?? $solicitation->created_at,
+                'user' => false,
+                'status' => 'info',
+            ],
+            [
+                'side' => 'left',
+                'icon' => 'flask-outline',
+                'label' => 'Pesquisa criada',
+                'date' => $solicitation->research_created_at ?? null,
+                'user' => true,
+                'status' => 'success',
+            ],
+            [
+                'side' => 'right',
+                'icon' =>
+                    $solicitation->status === 'finished'
+                        ? 'checkmark-circle-outline'
+                        : ($solicitation->status === 'error'
+                            ? 'close-circle-outline'
+                            : 'hourglass-outline'),
+                'label' =>
+                    $solicitation->status === 'finished'
+                        ? 'Pesquisa concluída'
+                        : ($solicitation->status === 'error'
+                            ? 'Erro na pesquisa'
+                            : 'Aguardando resultado'),
+                'date' => $solicitation->updated_at,
+                'user' => false,
+                'status' =>
+                    $solicitation->status === 'finished'
+                        ? 'success'
+                        : ($solicitation->status === 'error'
+                            ? 'danger'
+                            : 'warning'),
+            ],
+        ];
+      @endphp
+
+      @foreach ($timeline as $event)
+        @if ($event['date'])
+          <div class="timeline-msg timeline-{{ $event['side'] }}">
+            <div class="timeline-bubble timeline-{{ $event['status'] }}">
+              <span class="timeline-icon">
+                <ion-icon name="{{ $event['icon'] }}"></ion-icon>
+              </span>
+              <span class="timeline-label">{{ $event['label'] }}</span>
+              <span class="timeline-date">{{ \Carbon\Carbon::parse($event['date'])->format('d/m/Y H:i') }}</span>
+            </div>
+          </div>
         @endif
-      </div>
-    @endforeach
+      @endforeach
+    </div>
   </div>
 
   <div class="status-card">
@@ -215,16 +164,10 @@
         <strong>Resposta da API:</strong>
         <pre class="bg-light p-2 rounded" style="font-size:0.95em;white-space:pre-wrap;word-break:break-all;">
 {{ json_encode($research->api_response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}
-            </pre>
+        </pre>
       </div>
     @else
       <div class="alert alert-info mb-0">Ainda não há resultado para esta solicitação.</div>
     @endif
-  </div>
-
-  <div class="d-flex gap-2 justify-content-end mt-3">
-    <a href="{{ route('solicitations.index') }}" class="btn btn-secondary btn-lg px-4">
-      <ion-icon name="arrow-back-outline"></ion-icon> Voltar para minhas solicitações
-    </a>
   </div>
 @endsection

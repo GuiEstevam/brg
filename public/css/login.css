@@ -1,0 +1,135 @@
+/* ==========================
+   Login / Register BRG
+   ========================== */
+
+/* Logo (clara e escura, troca automática pelo script global) */
+.login-logo {
+    height: 90px;
+    transition: opacity 0.2s;
+    display: inline-block;
+}
+
+/* Card de login */
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 18px;
+    background: var(--brg-white);
+    box-shadow: 0 2px 8px 0 #8e263644;
+    margin-bottom: 2rem;
+    padding: 2rem 1.5rem;
+}
+
+/* Título do login */
+.login-title {
+    color: var(--brg-blue);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+}
+
+/* Link de senha */
+.login-link {
+    color: var(--brg-wine);
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.login-link:hover {
+    color: var(--brg-blue);
+    text-decoration: underline;
+}
+
+/* Botão de login */
+.login-btn {
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 0.65rem 0;
+    font-size: 1.1rem;
+}
+
+/* Ajustes de formulário */
+.login-card .form-label {
+    color: var(--brg-blue);
+    font-weight: 500;
+}
+.login-card .form-control {
+    background: var(--brg-light-gray);
+    color: var(--brg-blue);
+    border-radius: 10px;
+    border: 1px solid var(--brg-mid-gray);
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+}
+.login-card .form-control:focus {
+    border-color: var(--brg-wine);
+    box-shadow: 0 0 0 0.1rem #8e263644;
+}
+.login-card .form-check-label {
+    color: #7e8597;
+    font-size: 0.96rem;
+}
+.login-card .form-check-input:focus {
+    border-color: var(--brg-wine);
+    box-shadow: none;
+}
+
+/* Mensagens de erro e sucesso */
+.login-card .invalid-feedback {
+    font-size: 0.96rem;
+}
+.login-card .alert {
+    font-size: 0.97rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 575.98px) {
+    .login-card {
+        padding: 1.2rem 0.7rem;
+    }
+    .login-logo {
+        height: 60px;
+    }
+    .login-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* ==========================
+   Dark mode para login
+   ========================== */
+html[data-bs-theme="dark"] .login-card {
+    background: #23272f !important;
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .login-title {
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .form-control {
+    background: #2d313a !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+}
+html[data-bs-theme="dark"] .form-control::placeholder {
+    color: #ccc;
+}
+html[data-bs-theme="dark"] .form-label,
+html[data-bs-theme="dark"] .form-check-label {
+    color: #bfc5ce !important;
+}
+html[data-bs-theme="dark"] .login-link {
+    color: #ffe066 !important;
+}
+html[data-bs-theme="dark"] .login-link:hover {
+    color: #fff !important;
+}
+html[data-bs-theme="dark"] .alert {
+    background: #2d313a;
+    color: #ffe066;
+    border: 1px solid #353b48;
+}

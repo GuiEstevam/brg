@@ -3,6 +3,8 @@
 
 @push('styles')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 @endpush
 
 @section('content')
@@ -18,8 +20,8 @@
   <!-- Dashboard Cards -->
   <div class="row mb-4">
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon">
           <ion-icon name="person-outline"></ion-icon>
         </span>
         <div>
@@ -29,27 +31,23 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-green">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #4cd137;">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
         </span>
         <div>
-          <div class="dashboard-metric">
-            {{ $drivers->where('status', 'active')->count() }}
-          </div>
+          <div class="dashboard-metric">{{ $drivers->where('status', 'active')->count() }}</div>
           <div class="dashboard-label">Ativos</div>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-red">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #8e2636;">
           <ion-icon name="close-circle-outline"></ion-icon>
         </span>
         <div>
-          <div class="dashboard-metric">
-            {{ $drivers->where('status', 'inactive')->count() }}
-          </div>
+          <div class="dashboard-metric">{{ $drivers->where('status', 'inactive')->count() }}</div>
           <div class="dashboard-label">Inativos</div>
         </div>
       </div>
@@ -79,7 +77,7 @@
 
   <!-- Tabela de Motoristas -->
   <div class="table-responsive">
-    <table class="table align-middle pastel-table">
+    <table class="table align-middle">
       <thead>
         <tr>
           <th>#</th>

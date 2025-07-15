@@ -1,10 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Documentos')
 
-@push('styles')
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-@endpush
-
 @section('content')
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb bg-transparent p-0">
@@ -18,8 +14,8 @@
   <!-- Dashboard Cards -->
   <div class="row mb-4">
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon">
           <ion-icon name="document-outline"></ion-icon>
         </span>
         <div>
@@ -29,8 +25,8 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-green">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #4cd137;">
           <ion-icon name="checkmark-circle-outline"></ion-icon>
         </span>
         <div>
@@ -42,8 +38,8 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
-        <span class="dashboard-icon pastel-icon-red">
+      <div class="dashboard-metric-card">
+        <span class="dashboard-icon" style="color: #8e2636;">
           <ion-icon name="close-circle-outline"></ion-icon>
         </span>
         <div>
@@ -90,7 +86,7 @@
 
   <!-- Tabela de Documentos -->
   <div class="table-responsive">
-    <table class="table align-middle pastel-table">
+    <table class="table align-middle">
       <thead>
         <tr>
           <th>#</th>
@@ -104,13 +100,10 @@
       </thead>
       <tbody>
         @forelse($documents as $doc)
-          <tr>
+          <tr class="table-row-clickable" onclick="window.location='{{ route('documents.show', $doc) }}';"
+            style="cursor:pointer;">
             <td>{{ $doc->id }}</td>
-            <td>
-              <a href="{{ route('documents.show', $doc) }}" class="fw-semibold enterprise-link">
-                {{ $doc->original_name }}
-              </a>
-            </td>
+            <td>{{ $doc->original_name }}</td>
             <td>{{ ucfirst($doc->document_type) }}</td>
             <td>
               @if ($doc->owner)
@@ -128,11 +121,12 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('documents.edit', $doc) }}" class="btn btn-edit me-1" title="Editar">
+              <a href="{{ route('documents.edit', $doc) }}" class="btn btn-edit me-1" title="Editar"
+                onclick="event.stopPropagation();">
                 <ion-icon name="create-outline"></ion-icon>
               </a>
               <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $doc->id }}" title="Excluir">
+                data-bs-target="#deleteModal{{ $doc->id }}" title="Excluir" onclick="event.stopPropagation();">
                 <ion-icon name="trash-outline"></ion-icon>
               </button>
               @include('documents._delete_modal', ['document' => $doc])
@@ -148,3 +142,13 @@
   </div>
   {{ $documents->withQueryString()->links('pagination::bootstrap-5') }}
 @endsection
+
+@push('scripts')
+  <script>
+    // Realce de hover para linhas clicáveis
+    document.querySelectorAll('.table-row-clickable').forEach(row => {
+      row.addEventListener('mouseover', () => row.classList.add('table-row-hover'));
+      row.addEventListener('mouseout', () => row.classList.remove('table-row-hover'));
+    });
+  </script>
+@endpush
