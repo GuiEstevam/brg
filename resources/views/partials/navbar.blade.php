@@ -5,22 +5,28 @@
       <img src="{{ asset('img/logo-dark.png') }}" alt="Logo" id="logo-dark" class="logo-switch d-none"
         style="height: 40px;">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
 
         {{-- Cadastros --}}
-        @hasanyrole('master|admin|operador')
+        @hasanyrole('superadmin|admin|operador')
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="cadastrosDropdown" role="button"
-              data-bs-toggle="dropdown">
+              data-bs-toggle="dropdown" aria-expanded="false">
               Cadastros
             </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{{ route('enterprises.index') }}">Empresas</a></li>
-              <li><a class="dropdown-item" href="{{ route('branches.index') }}">Filiais</a></li>
+            <ul class="dropdown-menu" aria-labelledby="cadastrosDropdown">
+              @role('superadmin')
+                <li><a class="dropdown-item" href="{{ route('enterprises.index') }}">Empresas</a></li>
+              @endrole
+              @hasanyrole('superadmin|admin')
+                <li><a class="dropdown-item" href="{{ route('branches.index') }}">Filiais</a></li>
+              @endhasanyrole
               <li><a class="dropdown-item" href="{{ route('drivers.index') }}">Motoristas</a></li>
               <li><a class="dropdown-item" href="{{ route('vehicles.index') }}">Veículos</a></li>
               <li><a class="dropdown-item" href="{{ route('documents.index') }}">Documentos</a></li>
@@ -30,52 +36,91 @@
         @endhasanyrole
 
         {{-- Operações --}}
-        @hasanyrole('master|admin|operador')
+        @hasanyrole('superadmin|admin|operador')
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="operacoesDropdown" role="button"
-              data-bs-toggle="dropdown">
+              data-bs-toggle="dropdown" aria-expanded="false">
               Operações
             </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{{ route('contracts.index') }}">Contratos</a></li>
+            <ul class="dropdown-menu" aria-labelledby="operacoesDropdown">
+              @hasanyrole('superadmin|admin')
+                <li><a class="dropdown-item" href="{{ route('contracts.index') }}">Contratos</a></li>
+                <li><a class="dropdown-item" href="{{ route('solicitation-pricings.index') }}">Precificação</a></li>
+              @endhasanyrole
               <li><a class="dropdown-item" href="{{ route('solicitations.index') }}">Solicitações</a></li>
-              <li><a class="dropdown-item" href="{{ route('researches.index') }}">Pesquisas</a></li>
-              <li><a class="dropdown-item" href="{{ route('solicitation-pricings.index') }}">Precificação</a></li>
             </ul>
           </li>
         @endhasanyrole
 
-        {{-- Menus exclusivos para perfis específicos --}}
-        @role('motorista')
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('solicitations.index') }}">Minhas Solicitações</a>
+        {{-- Administração Global --}}
+        @role('superadmin')
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="administracaoDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Administração
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="administracaoDropdown">
+              <li><a class="dropdown-item" href="{{ route('users.index') }}">Usuários</a></li>
+              <li><a class="dropdown-item" href="{{ route('roles.index') }}">Papéis</a></li>
+              <li><a class="dropdown-item" href="{{ route('permissions.index') }}">Permissões</a></li>
+            </ul>
           </li>
         @endrole
 
+        {{-- Painel Motorista --}}
+        @role('motorista')
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="motoristaMenu" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Área do Motorista
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="motoristaMenu">
+              <li><a class="dropdown-item" href="{{ route('solicitations.index') }}">Minhas Solicitações</a></li>
+              <li><a class="dropdown-item" href="{{ route('profile.show') }}">Meu Perfil</a></li>
+            </ul>
+          </li>
+        @endrole
+
+        {{-- Painel Veículo --}}
         @role('veiculo')
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('vehicles.index') }}">Meus Dados</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="veiculoMenu" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Área do Veículo
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="veiculoMenu">
+              <li><a class="dropdown-item" href="{{ route('vehicles.index') }}">Meus Dados</a></li>
+              <li><a class="dropdown-item" href="{{ route('profile.show') }}">Perfil Veículo</a></li>
+            </ul>
           </li>
         @endrole
 
       </ul>
+
       <ul class="navbar-nav align-items-center">
         @auth
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
-              data-bs-toggle="dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+              role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle me-2" style="font-size:1.3em"></i>
               {{ Auth::user()->name }}
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li class="dropdown-header text-center">
-                <span class="badge bg-info mb-2">
-                  {{ strtoupper(Auth::user()->getRoleNames()->first()) }}
-                </span>
+                @foreach (Auth::user()->getRoleNames() as $role)
+                  <span class="badge bg-info mb-2 me-1">
+                    {{ strtoupper($role) }}
+                  </span>
+                @endforeach
               </li>
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="{{ route('profile.show') }}">Perfil</a></li>
+              <li>
+                <a class="dropdown-item" href="{{ route('profile.show') }}">
+                  <i class="bi bi-person"></i> Perfil
+                </a>
+              </li>
               <li>
                 <div class="dropdown-item px-0">
                   <div class="form-check form-switch d-flex align-items-center justify-content-between mb-0 px-3">
@@ -92,7 +137,9 @@
               <li>
                 <form method="POST" action="{{ route('logout') }}">
                   @csrf
-                  <button class="dropdown-item" type="submit">Sair</button>
+                  <button class="dropdown-item" type="submit">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                  </button>
                 </form>
               </li>
             </ul>

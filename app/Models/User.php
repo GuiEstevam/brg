@@ -12,17 +12,18 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasRoles;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
-    use SoftDeletes;
+    use HasApiTokens,
+        HasRoles,
+        HasFactory,
+        HasProfilePhoto,
+        Notifiable,
+        TwoFactorAuthenticatable,
+        SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -33,12 +34,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'enterprise_id',
-        'branch_id',
-        'driver_id',
-        'vehicle_id',
         'status',
         'deactivated_at',
+        'driver_id',
+        'vehicle_id',
     ];
 
     /**
@@ -78,19 +77,19 @@ class User extends Authenticatable
     // ===========================
 
     /**
-     * Empresa à qual o usuário pertence.
+     * Empresas às quais o usuário pertence (muitos-para-muitos).
      */
-    public function enterprise(): BelongsTo
+    public function enterprises(): BelongsToMany
     {
-        return $this->belongsTo(Enterprise::class);
+        return $this->belongsToMany(Enterprise::class);
     }
 
     /**
-     * Filial à qual o usuário pertence.
+     * Filiais às quais o usuário pertence (muitos-para-muitos).
      */
-    public function branch(): BelongsTo
+    public function branches(): BelongsToMany
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsToMany(Branch::class);
     }
 
     /**

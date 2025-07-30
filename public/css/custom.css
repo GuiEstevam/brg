@@ -61,6 +61,24 @@ a:hover,
 .table tbody tr:hover {
     background: #f2e9e1;
 }
+.badge-permission {
+    background: var(--brg-wine) !important;
+    color: var(--brg-white) !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2em 0.7em;
+    border-radius: 9px;
+    letter-spacing: 0.5px;
+}
+
+.table-row-clickable {
+    cursor: pointer;
+    transition: background 0.18s;
+}
+
+.table-row-clickable:hover {
+    background: #f2e9e1 !important;
+}
 
 .btn-primary {
     background: var(--brg-blue);
@@ -460,6 +478,18 @@ select,
     box-shadow: 0 2px 12px 0 #8e263633;
     padding: 2rem 1.5rem;
     margin-bottom: 2rem;
+}
+
+.btn-action-square {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-action-square ion-icon {
+    font-size: 1.2rem;
 }
 
 /* Dark Mode */
