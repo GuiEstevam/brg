@@ -11,6 +11,9 @@ class Vehicle extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'plate',
@@ -34,6 +37,12 @@ class Vehicle extends Model
         'status',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
+
     /**
      * Relacionamento: Um veículo pode ter vários documentos.
      */
@@ -43,11 +52,11 @@ class Vehicle extends Model
     }
 
     /**
-     * Relacionamento: Um veículo pode estar em várias solicitações.
+     * Relacionamento: Um veículo pode ter várias solicitações.
      */
     public function solicitations()
     {
-        return $this->belongsToMany(Solicitation::class, 'solicitation_vehicle');
+        return $this->hasMany(Solicitation::class);
     }
 
     /**

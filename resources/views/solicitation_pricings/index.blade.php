@@ -18,7 +18,7 @@
   <!-- Dashboard Cards -->
   <div class="row mb-4">
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
+      <div class="dashboard-card pastel-box" style="background: var(--bs-body-bg); color: var(--bs-body-color);">
         <span class="dashboard-icon pastel-icon">
           <ion-icon name="pricetag-outline"></ion-icon>
         </span>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
+      <div class="dashboard-card pastel-box" style="background: var(--bs-body-bg); color: var(--bs-body-color);">
         <span class="dashboard-icon pastel-icon-green">
           <ion-icon name="business-outline"></ion-icon>
         </span>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <div class="dashboard-card pastel-box">
+      <div class="dashboard-card pastel-box" style="background: var(--bs-body-bg); color: var(--bs-body-color);">
         <span class="dashboard-icon pastel-icon-red">
           <ion-icon name="calendar-outline"></ion-icon>
         </span>
@@ -75,7 +75,9 @@
       </div>
       <div class="col-md-5 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('solicitation-pricings.create') }}" class="btn btn-success ms-2">Nova Regra</a>
+        @if ($canCreateSolicitationPricing)
+          <a href="{{ route('solicitation-pricings.create') }}" class="btn btn-success ms-2">Nova Regra</a>
+        @endif
       </div>
     </form>
   </div>
@@ -111,14 +113,18 @@
               @endif
             </td>
             <td class="text-center">
-              <a href="{{ route('solicitation-pricings.edit', $pricing) }}" class="btn btn-edit me-1" title="Editar">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $pricing->id }}" title="Excluir">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('solicitation_pricings._delete_modal', ['solicitationPricing' => $pricing])
+              @can('update', $pricing)
+                <a href="{{ route('solicitation-pricings.edit', $pricing) }}" class="btn btn-edit me-1" title="Editar">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $pricing)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $pricing->id }}" title="Excluir">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('solicitation_pricings._delete_modal', ['solicitationPricing' => $pricing])
+              @endcan
             </td>
           </tr>
         @empty

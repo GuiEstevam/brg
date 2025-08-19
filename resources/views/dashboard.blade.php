@@ -8,6 +8,30 @@
 @endpush
 
 @section('content')
+  @php
+    $empresaNome = session('empresa_nome');
+    $filialNome = session('filial_nome');
+  @endphp
+  @if ($empresaNome || $filialNome)
+    <div class="alert alert-secondary d-flex align-items-center" role="alert">
+      <i class="bi bi-geo-alt me-2"></i>
+      <div>
+        <strong>Contexto atual</strong>:
+        @if ($empresaNome)
+          <span class="ms-1">Empresa: <strong>{{ $empresaNome }}</strong></span>
+        @endif
+        @if ($filialNome)
+          <span class="ms-3">Filial: <strong>{{ $filialNome }}</strong></span>
+        @endif
+      </div>
+      <form method="POST" action="{{ route('context.trocar') }}" class="ms-auto">
+        @csrf
+        <button type="submit" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-arrow-repeat me-1"></i> Trocar contexto
+        </button>
+      </form>
+    </div>
+  @endif
   <h1 class="mb-4 fw-bold" style="color:#0f2239;">Dashboard</h1>
 
   <div class="mb-3">

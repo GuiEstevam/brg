@@ -11,6 +11,7 @@ class DriverLicense extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use \App\Models\Concerns\AppliesContextScope;
 
     protected $fillable = [
         'driver_id',

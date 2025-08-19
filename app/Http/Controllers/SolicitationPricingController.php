@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\SolicitationPricing;
 use App\Models\Enterprise;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class SolicitationPricingController extends Controller
 {
     public function index(Request $request)
     {
-        $enterprises = Enterprise::orderBy('name')->get();
+        $user = Auth::user();
+        $enterprises = $user->hasRole('superadmin')
+            ? Enterprise::orderBy('name')->get()
+            : Enterprise::whereIn('id', $user->enterprises->pluck('id'))->orderBy('name')->get();
 
         $query = SolicitationPricing::with('enterprise');
 
@@ -23,6 +28,12 @@ class SolicitationPricingController extends Controller
                     });
             });
         }
+        if ($user->hasRole('admin')) {
+            $enterpriseId = current_enterprise_id();
+            $enterpriseIds = $enterpriseId ? [$enterpriseId] : $user->enterprises->pluck('id');
+            $query->whereIn('enterprise_id', $enterpriseIds);
+        }
+
         if ($request->filled('enterprise_id')) {
             $query->where('enterprise_id', $request->enterprise_id);
         }
@@ -34,17 +45,24 @@ class SolicitationPricingController extends Controller
             return $item->status === 'active';
         })->count();
 
+        $canCreateSolicitationPricing = Gate::allows('create', SolicitationPricing::class);
+
         return view('solicitation_pricings.index', compact(
             'solicitationPricings',
             'enterprises',
             'enterprisesCount',
-            'activeRulesCount'
+            'activeRulesCount',
+            'canCreateSolicitationPricing'
         ));
     }
 
     public function create()
     {
-        $enterprises = Enterprise::all();
+        Gate::authorize('create', SolicitationPricing::class);
+        $user = Auth::user();
+        $enterprises = $user->hasRole('superadmin')
+            ? Enterprise::orderBy('name')->get()
+            : Enterprise::whereIn('id', $user->enterprises->pluck('id'))->orderBy('name')->get();
         return view('solicitation_pricings.create', compact('enterprises'));
     }
 
@@ -82,6 +100,14 @@ class SolicitationPricingController extends Controller
         $validated['recurrence_agregado'] = $request->has('recurrence_agregado');
         $validated['recurrence_frota'] = $request->has('recurrence_frota');
 
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $allowed = current_enterprise_id()
+                ? current_enterprise_id() == $validated['enterprise_id']
+                : $user->enterprises->pluck('id')->contains($validated['enterprise_id']);
+            abort_unless($allowed, 403);
+        }
+
         $pricing = SolicitationPricing::create($validated);
 
         return redirect()->route('solicitation-pricings.show', $pricing)->with('success', 'Tabela de preços cadastrada!');
@@ -95,7 +121,11 @@ class SolicitationPricingController extends Controller
 
     public function edit(SolicitationPricing $solicitationPricing)
     {
-        $enterprises = Enterprise::all();
+        Gate::authorize('update', $solicitationPricing);
+        $user = Auth::user();
+        $enterprises = $user->hasRole('superadmin')
+            ? Enterprise::orderBy('name')->get()
+            : Enterprise::whereIn('id', $user->enterprises->pluck('id'))->orderBy('name')->get();
         return view('solicitation_pricings.edit', compact('solicitationPricing', 'enterprises'));
     }
 
@@ -131,6 +161,14 @@ class SolicitationPricingController extends Controller
         $validated['recurrence_agregado'] = $request->has('recurrence_agregado');
         $validated['recurrence_frota'] = $request->has('recurrence_frota');
 
+        $user = Auth::user();
+        if ($user->hasRole('admin')) {
+            $allowed = current_enterprise_id()
+                ? current_enterprise_id() == $validated['enterprise_id']
+                : $user->enterprises->pluck('id')->contains($validated['enterprise_id']);
+            abort_unless($allowed, 403);
+        }
+
         $solicitationPricing->update($validated);
 
         return redirect()->route('solicitation-pricings.show', $solicitationPricing)->with('success', 'Tabela de preços atualizada!');
@@ -138,6 +176,7 @@ class SolicitationPricingController extends Controller
 
     public function destroy(SolicitationPricing $solicitationPricing)
     {
+        Gate::authorize('delete', $solicitationPricing);
         $solicitationPricing->delete();
         return redirect()->route('solicitation-pricings.index')->with('success', 'Tabela de preços removida!');
     }

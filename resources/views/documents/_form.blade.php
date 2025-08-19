@@ -57,19 +57,31 @@
     @enderror
   </div>
   <div class="col-md-6 form-floating">
-    <input type="text" name="owner_id" id="owner_id" class="form-control @error('owner_id') is-invalid @enderror"
-      value="{{ old('owner_id', $document->owner_id ?? '') }}" placeholder="ID do Proprietário" required>
-    <label for="owner_id">ID do Proprietário *</label>
-    @error('owner_id')
+    <select name="owner_type" id="owner_type" class="form-select @error('owner_type') is-invalid @enderror" required>
+      <option value="">Selecione o tipo do proprietário</option>
+      <option value="App\\Models\\Driver" @selected(old('owner_type', $document->owner_type ?? '') === 'App\\Models\\Driver')>Motorista</option>
+      <option value="App\\Models\\Vehicle" @selected(old('owner_type', $document->owner_type ?? '') === 'App\\Models\\Vehicle')>Veículo</option>
+    </select>
+    <label for="owner_type">Tipo do Proprietário *</label>
+    @error('owner_type')
       <div class="invalid-feedback">{{ $message }}</div>
     @enderror
   </div>
   <div class="col-md-6 form-floating">
-    <input type="text" name="owner_type" id="owner_type"
-      class="form-control @error('owner_type') is-invalid @enderror"
-      value="{{ old('owner_type', $document->owner_type ?? '') }}" placeholder="Tipo do Proprietário" required>
-    <label for="owner_type">Tipo do Proprietário *</label>
-    @error('owner_type')
+    <select name="owner_id" id="owner_id" class="form-select @error('owner_id') is-invalid @enderror" required>
+      <option value="">Selecione o proprietário</option>
+      @if (old('owner_type', $document->owner_type ?? '') === 'App\\Models\\Driver')
+        @foreach (\App\Models\Driver::orderBy('name')->get() as $d)
+          <option value="{{ $d->id }}" @selected(old('owner_id', $document->owner_id ?? '') == $d->id)>{{ $d->name }}</option>
+        @endforeach
+      @elseif(old('owner_type', $document->owner_type ?? '') === 'App\\Models\\Vehicle')
+        @foreach (\App\Models\Vehicle::orderBy('plate')->get() as $v)
+          <option value="{{ $v->id }}" @selected(old('owner_id', $document->owner_id ?? '') == $v->id)>{{ $v->plate }}</option>
+        @endforeach
+      @endif
+    </select>
+    <label for="owner_id">Proprietário *</label>
+    @error('owner_id')
       <div class="invalid-feedback">{{ $message }}</div>
     @enderror
   </div>

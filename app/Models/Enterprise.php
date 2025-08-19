@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Enterprise extends Model
 {
     use SoftDeletes, HasFactory;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'cnpj',
@@ -28,6 +31,12 @@ class Enterprise extends Model
         'status',
         'deactivated_at',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     // Relacionamentos
     public function branches()

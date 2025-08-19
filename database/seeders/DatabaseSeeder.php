@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
             VehicleSeeder::class,
             DocumentSeeder::class,
             DriverLicenseSeeder::class,
-            SolicitationSeeder::class,
             ResearchSeeder::class,
             SolicitationPricingSeeder::class,
             PermissionSeeder::class,

@@ -11,6 +11,10 @@ class Document extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use \App\Models\Concerns\AppliesContextScope;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'file_path',
@@ -25,6 +29,12 @@ class Document extends Model
         'uploaded_by_user_id',
         'validated_by_user_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     /**
      * Relacionamento polimórfico: Documento pode pertencer a Driver ou Vehicle.

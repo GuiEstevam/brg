@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Contract extends Model
 {
     use SoftDeletes;
+    use \App\Models\Concerns\AppliesContextScope;
     use HasFactory;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'enterprise_id',
@@ -23,6 +27,12 @@ class Contract extends Model
         'unlimited_queries',
         'total_queries_used',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     /**
      * Relacionamento: Um contrato pertence a uma empresa.

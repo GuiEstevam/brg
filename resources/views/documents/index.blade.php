@@ -79,7 +79,9 @@
       </div>
       <div class="col-md-3 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('documents.create') }}" class="btn btn-success ms-2">Novo Documento</a>
+        @if ($canCreateDocument)
+          <a href="{{ route('documents.create') }}" class="btn btn-success ms-2">Novo Documento</a>
+        @endif
       </div>
     </form>
   </div>
@@ -121,15 +123,19 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('documents.edit', $doc) }}" class="btn btn-edit me-1" title="Editar"
-                onclick="event.stopPropagation();">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $doc->id }}" title="Excluir" onclick="event.stopPropagation();">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('documents._delete_modal', ['document' => $doc])
+              @can('update', $doc)
+                <a href="{{ route('documents.edit', $doc) }}" class="btn btn-edit me-1" title="Editar"
+                  onclick="event.stopPropagation();">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $doc)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $doc->id }}" title="Excluir" onclick="event.stopPropagation();">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('documents._delete_modal', ['document' => $doc])
+              @endcan
             </td>
           </tr>
         @empty

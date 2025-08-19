@@ -80,7 +80,11 @@
       </div>
       <div class="col-md-3 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('contracts.create') }}" class="btn btn-success ms-2">Novo Contrato</a>
+        <a href="{{ route('contracts.export.excel', request()->query()) }}" class="btn btn-outline-success ms-2">Exportar
+          Excel</a>
+        @if ($canCreateContract)
+          <a href="{{ route('contracts.create') }}" class="btn btn-success ms-2">Novo Contrato</a>
+        @endif
       </div>
     </form>
   </div>
@@ -121,15 +125,19 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('contracts.edit', $contract) }}" class="btn btn-edit me-1" title="Editar"
-                onclick="event.stopPropagation();">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $contract->id }}" title="Excluir" onclick="event.stopPropagation();">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('contracts._delete_modal', ['contract' => $contract])
+              @can('update', $contract)
+                <a href="{{ route('contracts.edit', $contract) }}" class="btn btn-edit me-1" title="Editar"
+                  onclick="event.stopPropagation();">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $contract)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $contract->id }}" title="Excluir" onclick="event.stopPropagation();">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('contracts._delete_modal', ['contract' => $contract])
+              @endcan
             </td>
           </tr>
         @empty

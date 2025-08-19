@@ -21,9 +21,9 @@
               Cadastros
             </a>
             <ul class="dropdown-menu" aria-labelledby="cadastrosDropdown">
-              @role('superadmin')
+              @hasanyrole('superadmin|admin')
                 <li><a class="dropdown-item" href="{{ route('enterprises.index') }}">Empresas</a></li>
-              @endrole
+              @endhasanyrole
               @hasanyrole('superadmin|admin')
                 <li><a class="dropdown-item" href="{{ route('branches.index') }}">Filiais</a></li>
               @endhasanyrole
@@ -53,19 +53,27 @@
         @endhasanyrole
 
         {{-- Administração Global --}}
-        @role('superadmin')
+        @hasanyrole('superadmin|admin|operador')
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="administracaoDropdown" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">
               Administração
             </a>
             <ul class="dropdown-menu" aria-labelledby="administracaoDropdown">
-              <li><a class="dropdown-item" href="{{ route('users.index') }}">Usuários</a></li>
-              <li><a class="dropdown-item" href="{{ route('roles.index') }}">Papéis</a></li>
-              <li><a class="dropdown-item" href="{{ route('permissions.index') }}">Permissões</a></li>
+              @hasanyrole('superadmin|admin|operador')
+                <li><a class="dropdown-item" href="{{ route('users.index') }}">Usuários</a></li>
+              @endhasanyrole
+              @role('superadmin')
+                <li><a class="dropdown-item" href="{{ route('roles.index') }}">Papéis</a></li>
+                <li><a class="dropdown-item" href="{{ route('permissions.index') }}">Permissões</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="{{ route('audit-logs.index') }}">Logs</a></li>
+              @endrole
             </ul>
           </li>
-        @endrole
+        @endhasanyrole
 
         {{-- Painel Motorista --}}
         @role('motorista')
@@ -104,6 +112,16 @@
               role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle me-2" style="font-size:1.3em"></i>
               {{ Auth::user()->name }}
+              @php
+                $empresaNome = session('empresa_nome');
+                $filialNome = session('filial_nome');
+              @endphp
+              @if (!Auth::user()->hasRole('superadmin') && ($empresaNome || $filialNome))
+                <span class="ms-2 context-badge">{{ $empresaNome }}@if ($filialNome)
+                    / {{ $filialNome }}
+                  @endif
+                </span>
+              @endif
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li class="dropdown-header text-center">
@@ -134,6 +152,32 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
+              @php
+                $empresaNome = session('empresa_nome');
+                $filialNome = session('filial_nome');
+              @endphp
+              @if (!Auth::user()->hasRole('superadmin'))
+                <li class="px-3 pt-1 pb-2 context-section">
+                  <div class="small mb-1 context-title">Contexto</div>
+                  @if ($empresaNome)
+                    <div class="small context-value"><i
+                        class="bi bi-building me-1"></i><strong>{{ $empresaNome }}</strong></div>
+                  @endif
+                  @if ($filialNome)
+                    <div class="small context-value"><i
+                        class="bi bi-diagram-3 me-1"></i><strong>{{ $filialNome }}</strong></div>
+                  @endif
+                  <form method="POST" action="{{ route('context.trocar') }}" class="mt-2">
+                    @csrf
+                    <button class="btn btn-sm w-100 btn-context-switch" type="submit">
+                      <i class="bi bi-arrow-repeat me-1"></i> Trocar contexto
+                    </button>
+                  </form>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+              @endif
               <li>
                 <form method="POST" action="{{ route('logout') }}">
                   @csrf

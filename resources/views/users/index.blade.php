@@ -58,7 +58,7 @@
       <div class="col-md-3">
         <select name="role" class="form-select">
           <option value="">-- Perfil --</option>
-          @foreach (\Spatie\Permission\Models\Role::orderBy('name')->get() as $role)
+          @foreach ($rolesForFilter as $role)
             <option value="{{ $role->name }}" @selected(request('role') == $role->name)>
               {{ ucfirst($role->name) }}
             </option>
@@ -68,7 +68,9 @@
       <div class="col-md-5 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
         <a href="{{ route('users.index') }}" class="btn btn-outline-secondary ms-2">Limpar</a>
-        <a href="{{ route('users.create') }}" class="btn btn-success ms-2">Novo Usuário</a>
+        @if ($canCreateUser)
+          <a href="{{ route('users.create') }}" class="btn btn-success ms-2">Novo Usuário</a>
+        @endif
       </div>
     </form>
   </div>
@@ -113,15 +115,19 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('users.edit', $user) }}" class="btn btn-edit btn-action-square me-1" title="Editar"
-                onclick="event.stopPropagation();">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-action-square" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $user->id }}" title="Excluir" onclick="event.stopPropagation();">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('users._delete_modal', ['user' => $user])
+              @can('update', $user)
+                <a href="{{ route('users.edit', $user) }}" class="btn btn-edit btn-action-square me-1" title="Editar"
+                  onclick="event.stopPropagation();">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $user)
+                <button class="btn btn-danger btn-action-square" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $user->id }}" title="Excluir" onclick="event.stopPropagation();">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('users._delete_modal', ['user' => $user])
+              @endcan
             </td>
           </tr>
         @empty

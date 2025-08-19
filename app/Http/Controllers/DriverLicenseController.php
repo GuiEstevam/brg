@@ -5,23 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\DriverLicense;
 use App\Models\Driver;
 use Illuminate\Http\Request;
+use App\Services\AuditLogger;
 
 class DriverLicenseController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', DriverLicense::class);
         $licenses = DriverLicense::with('driver')->paginate(20);
         return view('driver_licenses.index', compact('licenses'));
     }
 
     public function create()
     {
+        $this->authorize('create', DriverLicense::class);
         $drivers = Driver::all();
         return view('driver_licenses.create', compact('drivers'));
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', DriverLicense::class);
         $validated = $request->validate([
             'driver_id' => 'required|exists:drivers,id',
             'renach_number' => 'nullable|string|max:50',
@@ -47,37 +51,46 @@ class DriverLicenseController extends Controller
         ]);
 
         $license = DriverLicense::create($validated);
+        AuditLogger::log('created', $license, [], $license->toArray());
 
         return redirect()->route('driver-licenses.show', $license)->with('success', 'CNH cadastrada!');
     }
 
     public function show(DriverLicense $driverLicense)
     {
+        $this->authorize('view', $driverLicense);
         $driverLicense->load('driver');
         return view('driver_licenses.show', compact('driverLicense'));
     }
 
     public function edit(DriverLicense $driverLicense)
     {
+        $this->authorize('update', $driverLicense);
         $drivers = Driver::all();
         return view('driver_licenses.edit', compact('driverLicense', 'drivers'));
     }
 
     public function update(Request $request, DriverLicense $driverLicense)
     {
+        $this->authorize('update', $driverLicense);
         $validated = $request->validate([
             'driver_id' => 'required|exists:drivers,id',
             // ... mesmas regras do store
         ]);
 
+        $old = $driverLicense->getOriginal();
         $driverLicense->update($validated);
+        AuditLogger::log('updated', $driverLicense, $old, $driverLicense->toArray());
 
         return redirect()->route('driver-licenses.show', $driverLicense)->with('success', 'CNH atualizada!');
     }
 
     public function destroy(DriverLicense $driverLicense)
     {
+        $this->authorize('delete', $driverLicense);
+        $old = $driverLicense->getOriginal();
         $driverLicense->delete();
+        AuditLogger::log('deleted', $driverLicense, $old, []);
         return redirect()->route('driver-licenses.index')->with('success', 'CNH removida!');
     }
 }

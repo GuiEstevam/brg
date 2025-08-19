@@ -31,7 +31,7 @@
       </div>
       <div class="mb-3">
         <small class="text-muted">
-          Tipo: {{ ucfirst($document->document_type) }} |
+          Tipo: {{ translate_type($document->document_type) }} |
           Proprietário: {{ $document->owner->name ?? ($document->owner->title ?? ($document->owner_id ?? '-')) }} |
           Expira em:
           {{ $document->expiration_date ? \Carbon\Carbon::parse($document->expiration_date)->format('d/m/Y') : '-' }}
@@ -59,7 +59,7 @@
               <div class="d-flex align-items-center mb-2">
                 <ion-icon name="file-tray-full-outline" class="me-2" style="font-size:1.2rem;color:#8ee4af;"></ion-icon>
                 <span class="text-muted">Tipo:</span>
-                <span class="ms-2">{{ ucfirst($document->document_type) }}</span>
+                <span class="ms-2">{{ translate_type($document->document_type) }}</span>
               </div>
               <div class="d-flex align-items-center mb-2">
                 <ion-icon name="calendar-outline" class="me-2" style="font-size:1.2rem;color:#8ee4af;"></ion-icon>

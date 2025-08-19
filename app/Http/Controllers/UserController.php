@@ -9,12 +9,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use App\Http\Requests\ChangeUserPasswordRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', User::class);
         $query = User::with(['enterprises', 'branches', 'roles']);
+
+        // Contexto: superadmin vê tudo; admin vê usuários da empresa/filiais do contexto
+        $authUser = Auth::user();
+        if ($authUser->hasRole('admin')) {
+            $enterpriseId = current_enterprise_id();
+            if ($enterpriseId) {
+                $query->whereHas('enterprises', function ($q) use ($enterpriseId) {
+                    $q->where('enterprises.id', $enterpriseId);
+                });
+            } else {
+                $query->whereHas('enterprises', function ($q) use ($authUser) {
+                    $q->whereIn('enterprises.id', $authUser->enterprises->pluck('id'));
+                });
+            }
+        }
 
         // Filtro de pesquisa por nome ou e-mail
         $search = trim($request->input('search', ''));
@@ -34,6 +52,8 @@ class UserController extends Controller
         }
 
         $users = $query->orderBy('name')->paginate(20);
+        $canCreateUser = Gate::allows('create', User::class);
+        $rolesForFilter = Role::orderBy('name')->get();
 
         // Contadores para cards das métricas
         $totalUsers         = User::count();
@@ -46,15 +66,28 @@ class UserController extends Controller
             'totalActiveUsers',
             'totalInactiveUsers',
             'search',
-            'role'
+            'role',
+            'canCreateUser',
+            'rolesForFilter'
         ));
     }
 
     public function create()
     {
-
-        $enterprises = Enterprise::orderBy('name')->get();
-        $branches = Branch::with('enterprise')->orderBy('name')->get();
+        $this->authorize('create', User::class);
+        $authUser = Auth::user();
+        $enterprises = $authUser->hasRole('superadmin')
+            ? Enterprise::orderBy('name')->get()
+            : Enterprise::whereIn('id', $authUser->enterprises->pluck('id'))->orderBy('name')->get();
+        $branches = Branch::with('enterprise')
+            ->when(!$authUser->hasRole('superadmin'), function ($q) use ($authUser) {
+                $enterpriseIds = current_enterprise_id()
+                    ? [current_enterprise_id()]
+                    : $authUser->enterprises->pluck('id');
+                $q->whereIn('enterprise_id', $enterpriseIds);
+            })
+            ->orderBy('name')
+            ->get();
         $roles = Role::orderBy('name')->get();
         $branchesData = $branches->map(function ($b) {
             return [
@@ -70,6 +103,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', 'unique:users,email'],
@@ -98,8 +132,20 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $enterprises = Enterprise::orderBy('name')->get();
-        $branches = Branch::with('enterprise')->orderBy('name')->get();
+        $this->authorize('update', $user);
+        $authUser = Auth::user();
+        $enterprises = $authUser->hasRole('superadmin')
+            ? Enterprise::orderBy('name')->get()
+            : Enterprise::whereIn('id', $authUser->enterprises->pluck('id'))->orderBy('name')->get();
+        $branches = Branch::with('enterprise')
+            ->when(!$authUser->hasRole('superadmin'), function ($q) use ($authUser) {
+                $enterpriseIds = current_enterprise_id()
+                    ? [current_enterprise_id()]
+                    : $authUser->enterprises->pluck('id');
+                $q->whereIn('enterprise_id', $enterpriseIds);
+            })
+            ->orderBy('name')
+            ->get();
         $roles = Role::orderBy('name')->get();
         $branchesData = $branches->map(function ($b) {
             return [
@@ -128,6 +174,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user);
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', 'unique:users,email,' . $user->id],
@@ -160,6 +207,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $this->authorize('view', $user);
         // Nenhuma referência a team_id ou pivot custom - relações globais
         $user->load(['enterprises', 'branches', 'roles']);
         return view('users.show', compact('user'));
@@ -167,13 +215,15 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('delete', $user);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Usuário removido com sucesso!');
     }
 
     public function changePassword(ChangeUserPasswordRequest $request, User $user)
     {
-        $user->password = Hash::make($request->input('new_password'));
+        $validated = $request->validated();
+        $user->password = Hash::make($validated['new_password']);
         $user->save();
 
         return redirect()->route('users.edit', $user)->with('success', 'Senha atualizada com sucesso!');

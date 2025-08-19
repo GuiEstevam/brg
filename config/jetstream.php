@@ -61,7 +61,8 @@ return [
         // Features::termsAndPrivacyPolicy(),
         // Features::profilePhotos(),
         // Features::api(),
-        Features::teams(['invitations' => true]),
+        // Teams desabilitado porque o projeto não usa times
+        // Features::teams(['invitations' => true]),
         Features::accountDeletion(),
     ],
 

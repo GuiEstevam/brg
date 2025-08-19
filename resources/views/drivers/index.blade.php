@@ -68,9 +68,21 @@
           <option value="inactive" @selected(request('status') == 'inactive')>Inativo</option>
         </select>
       </div>
-      <div class="col-md-5 text-end">
+      @if (user_is_admin())
+        <div class="col-md-3">
+          <select name="enterprise_id" class="form-select" aria-label="Filtrar por empresa">
+            <option value="">-- Empresa --</option>
+            @foreach (Auth::user()->enterprises as $enterprise)
+              <option value="{{ $enterprise->id }}" @selected(request('enterprise_id') == $enterprise->id)>{{ $enterprise->name }}</option>
+            @endforeach
+          </select>
+        </div>
+      @endif
+      <div class="col-md-{{ user_is_admin() ? '3' : '5' }} text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('drivers.create') }}" class="btn btn-success ms-2">Novo Motorista</a>
+        @if ($canCreateDriver)
+          <a href="{{ route('drivers.create') }}" class="btn btn-success ms-2">Novo Motorista</a>
+        @endif
       </div>
     </form>
   </div>
@@ -107,14 +119,18 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('drivers.edit', $driver) }}" class="btn btn-edit me-1" title="Editar">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $driver->id }}" title="Excluir">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('drivers._delete_modal', ['driver' => $driver])
+              @can('update', $driver)
+                <a href="{{ route('drivers.edit', $driver) }}" class="btn btn-edit me-1" title="Editar">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $driver)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $driver->id }}" title="Excluir">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('drivers._delete_modal', ['driver' => $driver])
+              @endcan
             </td>
           </tr>
         @empty

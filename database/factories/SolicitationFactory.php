@@ -19,14 +19,16 @@ class SolicitationFactory extends Factory
             'branch_id' => Branch::factory(),
             'driver_id' => Driver::factory(),
             'vehicle_id' => Vehicle::factory(),
-            'type' => $this->faker->randomElement(['driver', 'vehicle', 'composed']),
-            'subtype' => $this->faker->randomElement(['person_process', 'cnh', 'vehicle_data', 'integrated', 'ocr', 'analysis']),
-            'value' => $this->faker->numerify('###########'),
+            'entity_type' => $this->faker->randomElement(['driver', 'vehicle', 'composed']),
+            'entity_value' => $this->faker->numerify('###########'),
             'status' => 'pending',
-            'vincle_type' => $this->faker->randomElement(['Autonomo', 'Agregado', 'Funcionario']),
-            'research_type' => $this->faker->randomElement(['Expressa', 'Normal', 'Pesquisa_Mais']),
+            'vincle_type' => $this->faker->randomElement(['autonomo', 'agregado', 'funcionario']),
+            'research_type' => $this->faker->randomElement(['basic', 'complete', 'express']),
+            'calculated_price' => $this->faker->randomFloat(2, 50, 200),
+            'auto_renewal' => $this->faker->boolean(20),
             'original_solicitation_id' => null,
             'api_request_data' => [],
+            'notes' => $this->faker->optional(0.3)->sentence(),
         ];
     }
 }

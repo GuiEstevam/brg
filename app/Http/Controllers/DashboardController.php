@@ -29,9 +29,11 @@ class DashboardController extends Controller
             $data['chartData'] = [10, 20, 18, 25, 22, 30];
         }
 
-        // ADMIN: visão limitada às solicitações de sua(s) empresa(s)
+        // ADMIN: visão limitada à empresa do contexto (todas filiais)
         if ($user->hasRole('admin')) {
-            $enterpriseIds = $user->enterprises->pluck('id')->toArray();
+            $enterpriseIds = current_enterprise_id()
+                ? [current_enterprise_id()]
+                : $user->enterprises->pluck('id')->toArray();
 
             // Motoristas já aproveitados em solicitações da(s) empresa(s)
             $data['totalDrivers'] = Driver::whereHas('solicitations', function ($q) use ($enterpriseIds) {
@@ -55,14 +57,21 @@ class DashboardController extends Controller
             $data['chartData'] = [5, 8, 12, 7, 10, 15];
         }
 
-        // OPERADOR: solicitações da empresa
+        // OPERADOR: solicitações da empresa/filial do contexto
         if ($user->hasRole('operador')) {
-            $enterpriseIds = $user->enterprises->pluck('id')->toArray();
+            $enterpriseId = current_enterprise_id();
+            $branchId = current_branch_id();
 
-            $data['pendingSolicitations'] = Solicitation::whereIn('enterprise_id', $enterpriseIds)
-                ->where('status', 'pending')->count();
-            $data['completedSolicitations'] = Solicitation::whereIn('enterprise_id', $enterpriseIds)
-                ->where('status', 'completed')->count();
+            $query = Solicitation::query();
+            if ($enterpriseId) {
+                $query->where('enterprise_id', $enterpriseId);
+            }
+            if ($branchId) {
+                $query->where('branch_id', $branchId);
+            }
+
+            $data['pendingSolicitations'] = (clone $query)->where('status', 'pending')->count();
+            $data['completedSolicitations'] = (clone $query)->where('status', 'completed')->count();
 
             $data['chartLabels'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
             $data['chartData'] = [3, 6, 4, 9, 7, 8];

@@ -23,11 +23,59 @@
     @yield('content')
   </main>
 
+  <!-- Modal de Acesso Negado -->
+  <div class="modal fade" id="forbiddenModal" tabindex="-1" aria-labelledby="forbiddenModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title d-flex align-items-center" id="forbiddenModalLabel">
+            <i class="bi bi-shield-x me-2"></i>
+            Acesso Não Autorizado
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0">
+              <i class="bi bi-exclamation-triangle-fill text-warning fs-2"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <p class="mb-2">
+                @if (session('forbiddenmessage'))
+                  {{ session('forbiddenmessage') }}
+                @else
+                  Você não tem permissão para acessar este recurso ou executar esta ação.
+                @endif
+              </p>
+              <p class="mb-0 text-muted small">
+                Caso acredite que isto seja um erro, entre em contato com o administrador do sistema.
+              </p>
+              @if (session('forbiddenurl'))
+                <hr class="my-2">
+                <small class="text-muted">
+                  <strong>URL tentada:</strong>
+                  <code class="text-break">{{ session('forbiddenurl') }}</code>
+                </small>
+              @endif
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-check-circle me-1"></i>
+            Entendi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Ionicons (global) -->
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
   @stack('scripts')
 
   <!-- Script para alternância de tema e logo -->
@@ -94,6 +142,15 @@
         attributes: true,
         attributeFilter: ['data-bs-theme']
       });
+
+      // Script para exibir o modal de acesso negado
+      @if (session('acessonegado'))
+        const forbiddenModal = new bootstrap.Modal(document.getElementById('forbiddenModal'), {
+          backdrop: 'static',
+          keyboard: false
+        });
+        forbiddenModal.show();
+      @endif
     });
   </script>
 </body>

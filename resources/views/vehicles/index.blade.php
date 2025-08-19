@@ -67,9 +67,21 @@
           <option value="inactive" @selected(request('status') == 'inactive')>Inativo</option>
         </select>
       </div>
-      <div class="col-md-5 text-end">
+      @if (user_is_admin())
+        <div class="col-md-3">
+          <select name="enterprise_id" class="form-select" aria-label="Filtrar por empresa">
+            <option value="">-- Empresa --</option>
+            @foreach (Auth::user()->enterprises as $enterprise)
+              <option value="{{ $enterprise->id }}" @selected(request('enterprise_id') == $enterprise->id)>{{ $enterprise->name }}</option>
+            @endforeach
+          </select>
+        </div>
+      @endif
+      <div class="col-md-{{ user_is_admin() ? '2' : '5' }} text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('vehicles.create') }}" class="btn btn-success ms-2">Novo Veículo</a>
+        @if ($canCreateVehicle)
+          <a href="{{ route('vehicles.create') }}" class="btn btn-success ms-2">Novo Veículo</a>
+        @endif
       </div>
     </form>
   </div>
@@ -109,15 +121,19 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-edit me-1" title="Editar"
-                onclick="event.stopPropagation();">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $vehicle->id }}" title="Excluir" onclick="event.stopPropagation();">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('vehicles._delete_modal', ['vehicle' => $vehicle])
+              @can('update', $vehicle)
+                <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-edit me-1" title="Editar"
+                  onclick="event.stopPropagation();">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $vehicle)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $vehicle->id }}" title="Excluir" onclick="event.stopPropagation();">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('vehicles._delete_modal', ['vehicle' => $vehicle])
+              @endcan
             </td>
           </tr>
         @empty

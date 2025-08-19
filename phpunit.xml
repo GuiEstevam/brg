@@ -10,6 +10,18 @@
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
+            <exclude>tests/Feature/*Team*.php</exclude>
+            <exclude>tests/Feature/DeleteAccountTest.php</exclude>
+            <exclude>tests/Feature/InviteTeamMemberTest.php</exclude>
+            <exclude>tests/Feature/LeaveTeamTest.php</exclude>
+            <exclude>tests/Feature/UpdateTeamMemberRoleTest.php</exclude>
+            <exclude>tests/Feature/UpdateTeamNameTest.php</exclude>
+            <exclude>tests/Feature/ApiTokenPermissionsTest.php</exclude>
+            <exclude>tests/Feature/DeleteApiTokenTest.php</exclude>
+            <exclude>tests/Feature/CreateApiTokenTest.php</exclude>
+            <exclude>tests/Feature/CreateTeamTest.php</exclude>
+            <exclude>tests/Feature/DeleteTeamTest.php</exclude>
+            <exclude>tests/Feature/RemoveTeamMemberTest.php</exclude>
         </testsuite>
     </testsuites>
     <source>

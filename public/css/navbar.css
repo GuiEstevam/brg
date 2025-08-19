@@ -50,6 +50,35 @@
     color: #fff !important;
 }
 
+/* Context badge next to username */
+.navbar .context-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-radius: 9999px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+}
+html[data-bs-theme="dark"] .navbar .context-badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Context section inside dropdown */
+.navbar .dropdown-menu .context-section .context-title {
+    color: #d0d6e1 !important;
+}
+.navbar .dropdown-menu .context-section .context-value {
+    color: #ffffff !important;
+}
+.navbar .dropdown-menu .btn-context-switch {
+    color: #fff;
+    border-color: #fff;
+}
+.navbar .dropdown-menu .btn-context-switch:hover {
+    background-color: var(--brg-wine);
+    border-color: var(--brg-wine);
+}
+
 /* Dropdown header (perfil) */
 .navbar .dropdown-header {
     background: transparent;

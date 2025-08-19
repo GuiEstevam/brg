@@ -11,6 +11,10 @@ class Branch extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use \App\Models\Concerns\AppliesContextScope;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'enterprise_id',
@@ -26,6 +30,12 @@ class Branch extends Model
         'email',
         'status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     /**
      * Relacionamento: Uma filial pertence a uma empresa (Enterprise).

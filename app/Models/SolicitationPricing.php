@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SolicitationPricing extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory, \App\Models\Concerns\AppliesContextScope;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'enterprise_id',
@@ -28,6 +31,12 @@ class SolicitationPricing extends Model
         'validity_funcionario_days',
         'status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     /**
      * Relacionamento: Precificação pertence a uma empresa.

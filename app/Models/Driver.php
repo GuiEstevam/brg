@@ -11,6 +11,9 @@ class Driver extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    use \App\Observers\ModelAuditObserver {
+        bootModelAudit as private __bootModelAudit;
+    }
 
     protected $fillable = [
         'cpf',
@@ -23,6 +26,12 @@ class Driver extends Model
         'rg_uf',
         'status',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::__bootModelAudit();
+    }
 
     /**
      * Relacionamento: Um motorista pode ter vários documentos.

@@ -68,7 +68,9 @@
       </div>
       <div class="col-md-5 text-end">
         <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{{ route('branches.create') }}" class="btn btn-success ms-2">Nova Filial</a>
+        @if ($canCreateBranch)
+          <a href="{{ route('branches.create') }}" class="btn btn-success ms-2">Nova Filial</a>
+        @endif
       </div>
     </form>
   </div>
@@ -98,15 +100,19 @@
               </span>
             </td>
             <td class="text-center">
-              <a href="{{ route('branches.edit', $branch) }}" class="btn btn-edit me-1" title="Editar"
-                onclick="event.stopPropagation();">
-                <ion-icon name="create-outline"></ion-icon>
-              </a>
-              <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                data-bs-target="#deleteModal{{ $branch->id }}" title="Excluir" onclick="event.stopPropagation();">
-                <ion-icon name="trash-outline"></ion-icon>
-              </button>
-              @include('branches._delete_modal', ['branch' => $branch])
+              @can('update', $branch)
+                <a href="{{ route('branches.edit', $branch) }}" class="btn btn-edit me-1" title="Editar"
+                  onclick="event.stopPropagation();">
+                  <ion-icon name="create-outline"></ion-icon>
+                </a>
+              @endcan
+              @can('delete', $branch)
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                  data-bs-target="#deleteModal{{ $branch->id }}" title="Excluir" onclick="event.stopPropagation();">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+                @include('branches._delete_modal', ['branch' => $branch])
+              @endcan
             </td>
           </tr>
         @empty
